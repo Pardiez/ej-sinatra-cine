@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf8">
+  <title><%= "#{@title} | #{SITE_TITLE}" %></title>
+  <link href="/reset.css" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <hgroup>
+      <h1><a href="/"><%= SITE_TITLE %></a></h1>
+      <h2><%= SITE_DESCRIPTION %></h2>
+    </hgroup>
+  </header>
+
+  <div id="main">
+    <%= yield %>
+  </div>
+
+  <footer>
+    <p><small>Realizado por David Peña. Proyecto disponible en <a href="https://github.com/Pardiez/ej-sinatra-cine">Github</a>.</small></p>
+  </footer>
+</body>
+</html>
