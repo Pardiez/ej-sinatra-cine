@@ -1,0 +1,11 @@
+<form action="/buy" method="post">
+  <input type="text" name="name">
+  <input type="text" name="phone">
+  <input type="text" name="email">
+  <select name="film">
+  <% @films.each do |film| %>
+    <option value="<%= film[0] %>"><%= film[1] %> (<%= film[2].round(2) %> €)</option>
+  <% end %>
+  </select>
+  <input type="submit">
+</form>
