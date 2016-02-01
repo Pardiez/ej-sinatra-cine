@@ -1,13 +1,14 @@
 require 'sinatra'
 require 'sinatra/contrib'
 require 'pony'
-require 'yaml'
+require 'hashids'
 
 config_file 'config.yml'
 
 configure :production do
+    set "HASH_SALT", ENV['HASH_SALT']
     set "email_options", {
-      :from => settings.EMAIL_FROM,
+      :from => ENV['EMAIL_FROM'],
       :via => :smtp,
       :via_options => {
         :address => 'smtp.sendgrid.net',
@@ -36,12 +37,12 @@ configure :development do
     }
 end
 
-
 SITE_TITLE = "CineTicket"
 SITE_DESCRIPTION = "Tu entrada de cine online"
 
 Ticket = Struct.new(:id, :name, :phone, :email, :film)
 Film = Struct.new(:id, :title, :price)
+hashids = Hashids.new settings.HASH_SALT
 
 tickets = []
 films = [
@@ -71,6 +72,8 @@ post '/buy/?' do
   id = max_id_of(tickets) + 1
   @ticket = Ticket.new(id, params[:name], params[:phone], params[:email], @film)
   tickets << @ticket
+  hash = hashids.encode(id)
+  @url = 'http://' + request.host + '/ticket/' + hash
 
   Pony.options = settings.email_options
   Pony.mail :to => params[:email],
@@ -78,11 +81,13 @@ post '/buy/?' do
             :html_body => erb(:email_html, layout: false),
             :body => erb(:email, layout: false)
 
-  redirect '/ticket/' + id.to_s
+  redirect '/ticket/' + hash
 end
 
-get '/ticket/:id/?' do
-  @ticket = tickets.find { |t| t.id == params[:id].to_i }
+get '/ticket/:hash/?' do
+  hash = params[:hash]
+  id = hashids.decode(hash)[0].to_i
+  @ticket = tickets.find { |t| t.id == id }
   erb :ticket
 end
 
