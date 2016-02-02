@@ -1,46 +1,14 @@
 require 'sinatra'
-require 'sinatra/contrib'
 require 'pony'
 require 'hashids'
+require 'dotenv'
+Dotenv.load
 
-config_file 'config.yml'
-
-configure :production do
-    set "HASH_SALT", ENV['HASH_SALT']
-    set "email_options", {
-      :from => ENV['EMAIL_FROM'],
-      :via => :smtp,
-      :via_options => {
-        :address => 'smtp.sendgrid.net',
-        :port => '587',
-        :domain => 'heroku.com',
-        :user_name => ENV['SENDGRID_USERNAME'],
-        :password => ENV['SENDGRID_PASSWORD'],
-        :authentication => :plain,
-        :enable_starttls_auto => true
-      },
-    }
-end
-
-configure :development do
-    set "email_options", {
-      :via => :smtp,
-      :via_options => {
-        :address              => 'smtp.gmail.com',
-        :port                 => '587',
-        :enable_starttls_auto => true,
-        :user_name            => settings.EMAIL_USER,
-        :password             => settings.EMAIL_PASS,
-        :authentication       => :plain,
-        :domain               => "localhost.localdomain"
-      }
-    }
-end
+require './config'
 
 SITE_TITLE = "CineTicket"
 SITE_DESCRIPTION = "Tu entrada de cine online"
-hashids = Hashids.new settings.HASH_SALT
-
+hashids = Hashids.new ENV['HASH_SALT']
 
 class Tickets
   def initialize
@@ -151,8 +119,4 @@ def send_mail
             :subject => 'Aqui tienes tu entrada de cine',
             :html_body => erb(:email_html, layout: false),
             :body => erb(:email, layout: false)
-end
-
-after do
-  tickets.each{|t| p t.id}
 end
