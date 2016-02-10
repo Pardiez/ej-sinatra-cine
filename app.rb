@@ -8,17 +8,18 @@ require './config'
 
 SITE_TITLE = "CineTicket"
 SITE_DESCRIPTION = "Tu entrada de cine online"
-hashids = Hashids.new ENV['HASH_SALT']
 
 class Tickets
   def initialize
     @tickets = []
+    @hashids = Hashids.new ENV['HASH_SALT']
   end
 
   def add(ticket)
     id = max_id + 1
     @tickets << ticket
     ticket.id = id
+    ticket.hash = @hashids.encode(id)
   end
 
   def each(&block)
@@ -65,7 +66,7 @@ films = Films.new
 
 class Ticket
   attr_reader :name, :phone, :email, :film
-  attr_accessor :id
+  attr_accessor :id, :hash
 
   def initialize(name, phone, email, film)
     @name, @phone, @email, @film = name, phone, email, film
@@ -81,8 +82,21 @@ class Film
   end
 end
 
+class TicketManager
+  def initialize(films, tickets)
+    @films, @tickets = films, tickets
+  end
+  def buy(params)
+    film = @films.get(params[:film])
+    ticket = Ticket.new(params[:name], params[:phone], params[:email], film)
+    @tickets.add(ticket)
+    ticket
+  end
+end
+
 films.add(Film.new('Star Wars', 2))
 films.add(Film.new('Mad Max', 3.5))
+ticketManager = TicketManager.new(films, tickets)
 
 get '/' do
   @title = 'Inicio'
@@ -96,20 +110,15 @@ get '/buy/?' do
 end
 
 post '/buy/?' do
-  film = films.get(params[:film])
-  @ticket = Ticket.new(params[:name], params[:phone], params[:email], film)
-  tickets.add(@ticket)
-  hash = hashids.encode(tickets.max_id)
-  @url = 'http://' + request.host + '/ticket/' + hash
+  @ticket = ticketManager.buy(params)
+  @url = 'http://' + request.host + '/ticket/' + @ticket.hash
   send_mail
 
-  redirect '/ticket/' + hash
+  redirect '/ticket/' + @ticket.hash
 end
 
 get '/ticket/:hash/?' do
-  hash = params[:hash]
-  id = hashids.decode(hash)[0].to_i
-  @ticket = tickets.find { |t| t.id == id }
+  @ticket = tickets.find { |t| t.hash == params[:hash] }
   erb :ticket
 end
 
