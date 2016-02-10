@@ -1,6 +1,6 @@
 require 'capybara/rspec'
-
 require './app'
+
 Capybara.app = Sinatra::Application
 
 describe "the signin process", :type => :feature do

@@ -1,0 +1,10 @@
+language: ruby
+rvm:
+- 2.2.4
+deploy:
+  provider: heroku
+  api_key:
+    secure: PkyA25fV2OlDdXnqZIIsB5Rd37svt+Jb9Rji/TpYY1dsFQ0pTqChEKnI7at4O5uC6Ssp20Uu96mSpbvjiKZHlmSHxLyZLQTtfFxma92KU8po32W1M/OoyZfiNVdNs6jAPgT5ndz+BLqZ2UegkSjLh9JpcGSk8GHp7DnxFJuzQCEQKCCFolVJcZGHa0/VC8U/qGMZ13bCh4IJ9HS/IsDBhAVkpwe9QA2Rj1f/hF0cxV41R2rCmgUo9PADmtuPxO+6f9+C9UF/UHJzZA6EKuZxIo8dJl+qxXek4SIB1734/aUaffpF4+js02AFj1JSnLKwvDPR51VFRP+kQAh5HHBSbc6fytlO7YTMfPkc75KnUvJOfrXSAMB1p/JRnbxQPjkyRQ5rk/DI15mG5zpuXsGnIXZoWFLt5LC6t9D7bFdiRZggn/ww8T7gkk7hZ9noraFtttYfDvbbIPq79zbFWmO+9md6asyin8HocxxWMswBFsO/n4vlrpwCgQPf2wBj4rC4tgem43lU8G2tWUF2GgetseeHvs7xiO1AA09txCeTa5mT+Z7UKzEDUwMXSk0aOYc5r/otzmhSiZvirWhV38xoif9+DZV0uu/WNLCspwLZtupWr+U54v784tbm9+kQ9roA8THF/jW9dzAASHPMT1WsttP8TKuKuIsGzKVWO+Q+vSM=
+  app: devscola-dp-sinatra-cine
+  on:
+    repo: Pardiez/ej-sinatra-cine
