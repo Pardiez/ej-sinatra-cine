@@ -1,0 +1,34 @@
+{
+  "name": "cine-ticket",
+  "version": "0.1.0",
+  "description": "An example project in Sinatra",
+  "author": "David Peña <davidpardiez@gmail.com>",
+  "contributors": [{
+    "name": "Devscola",
+    "email": "hola@devscola.org"
+  }],
+  "bin": {
+
+  },
+  "scripts": {
+    "predeploy": "echo im about to deploy",
+    "postdeploy": "echo ive deployed"
+  },
+  "repository": {
+  },
+  "bugs": {
+  },
+  "keywords": [
+    "sinatra",
+    "example",
+    "devscola"
+  ],
+  "dependencies": {
+    "bootstrap": "*"
+  },
+  "devDependencies": {
+  },
+  "private": true,
+  "publishConfig": {
+  }
+}
